@@ -5,26 +5,19 @@
 #include <debug.h>
 
 
-int AB_gen(maze_t *maze, int startrow, int startcol){
+int AB_gen(maze_t *maze, uint8_t startrow, uint8_t startcol){
     
     int numToVisit = maze->rows * maze->cols;
-    int cell_row = startrow, cell_col = startcol;
-    int directions[4], ndirs;
+    uint8_t cell_row = startrow, cell_col = startcol;
+    uint8_t directions[4], ndirs;
     cell_t *currentCell, *nextCell;
     int lim = (numToVisit * 2 / 3);
 
     while(numToVisit > lim){
         currentCell = &maze->cells[cell_row][cell_col];
-        if(!currentCell->visited){
-            dbg_sprintf(dbgout, "numToVisit: %d\n", numToVisit);
-            // dbg_sprintf(dbgout, "pos: %d, %d\n", cell_col, cell_row);
-            // print_maze(maze);
-        }
-        
         
         currentCell->visited = 1;
         ndirs = getAdjacentNum_IGNORE_VISIT(directions, cell_row, cell_col, maze->rows, maze->cols);
-        
 
         switch(directions[rand() % ndirs]){
             case North:

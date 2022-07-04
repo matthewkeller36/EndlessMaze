@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <debug.h>
+#include <stdint.h>
 #include "Wilsons.h"
 
 /**
@@ -10,7 +11,7 @@
  * @param col Starting column of the chain.
  * @return Number of cells added from the chain.
  */
-int build_wilson_chain(maze_t *maze, int row, int col){
+int build_wilson_chain(maze_t *maze, uint8_t row, uint8_t col){
     cell_t *currCell = &maze->cells[row][col];
     int visited = 0;
     /* Iterate until chain has reached a visited cell */
@@ -46,13 +47,13 @@ int build_wilson_chain(maze_t *maze, int row, int col){
 
 int wilsons_gen(maze_t *maze, int numToVisit){
     /*Seed a new chain at a random starting point*/
-    int cur_col = rand() % maze->cols;
-    int cur_row = rand() % maze->rows;
-    int start_col = cur_col;
-    int start_row = cur_row;
-    int newChain = 1;
+    uint8_t cur_col = rand() % maze->cols;
+    uint8_t cur_row = rand() % maze->rows;
+    uint8_t start_col = cur_col;
+    uint8_t start_row = cur_row;
+    uint8_t newChain = 1;
 
-    int directions[4], ndirs;
+    uint8_t directions[4], ndirs;
     
 
     while(numToVisit > 0){

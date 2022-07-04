@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <debug.h>
+#include <stdint.h>
 #include "maze_tools.h"
 
 void print_maze(maze_t *maze){
@@ -30,8 +31,8 @@ void print_maze(maze_t *maze){
 }
 
 void walled_maze(maze_t *maze){
-    for(int i = 0; i < maze->rows; i++){
-        for(int j = 0; j < maze->cols; j++){
+    for(uint8_t i = 0; i < maze->rows; i++){
+        for(uint8_t j = 0; j < maze->cols; j++){
             maze->cells[i][j].east = 1;
             maze->cells[i][j].south = 1;
         }
@@ -39,15 +40,15 @@ void walled_maze(maze_t *maze){
 }
 
 void clear_visited(maze_t *maze){
-    for(int i = 0; i < maze->rows; i++){
-        for(int j = 0; j < maze->cols; j++){
+    for(uint8_t i = 0; i < maze->rows; i++){
+        for(uint8_t j = 0; j < maze->cols; j++){
             maze->cells[i][j].visited = 0;
         }
     }
 }
 
-int getAdjacentNum_IGNORE_VISIT(int dir[], int cell_row, int cell_col, int maxRow, int maxCol){
-    int ndir = 0;
+uint8_t getAdjacentNum_IGNORE_VISIT(uint8_t dir[], uint8_t cell_row, uint8_t cell_col, uint8_t maxRow, uint8_t maxCol){
+    uint8_t ndir = 0;
     if(cell_row > 0){
         dir[ndir++] = North;
     }

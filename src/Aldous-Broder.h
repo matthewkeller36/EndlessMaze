@@ -11,6 +11,6 @@
  * @param startcol Column in maze to start generation from.
  * @return Number of remaining cells. 
  */
-int AB_gen(maze_t *maze, int startrow, int startcol);
+int AB_gen(maze_t *maze, uint8_t startrow, uint8_t startcol);
 
 #endif

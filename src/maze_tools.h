@@ -62,6 +62,6 @@ void print_maze(maze_t *maze);
  * @param maxCol Maximum column.
  * @return Number of possible movement directions.
  */
-int getAdjacentNum_IGNORE_VISIT(int dir[], uint8_t cell_row, uint8_t cell_col, uint8_t maxRow, uint8_t maxCol);
+uint8_t getAdjacentNum_IGNORE_VISIT(uint8_t dir[], uint8_t cell_row, uint8_t cell_col, uint8_t maxRow, uint8_t maxCol);
 
 #endif

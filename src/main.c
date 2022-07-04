@@ -33,24 +33,28 @@ enum{MENU, GENERATE, PLAY, QUIT};
 struct game{
     maze_t maze;
     char state;
-    uint8_t bgColor, wallColor, playerColor;
+    uint8_t bgColor, wallColor, playerColor, goalColor;
 };
 
 
 
 int main(void){
-    static struct game game = {
-        .bgColor = 62,
-        .playerColor = 13,
-        .wallColor = 0,
-        .maze.rows = 10,
-        .maze.cols = 15
-    };
-    if(game.maze.rows > MAX_CELL_ROWS){
-        game.maze.rows = MAX_CELL_ROWS;
-    }
-    if(game.maze.cols > MAX_CELL_COLS){
-        game.maze.cols = MAX_CELL_COLS;
+    static struct game game;
+    ti_var_t file;
+    if(!(file = ti_Open("EMSETT", "r"))){
+        game.bgColor = 255;
+        game.wallColor = 0;
+        game.playerColor = 31;
+        game.goalColor = 37;
+        game.maze.rows = 20;
+        game.maze.cols = 20;
+    }else{
+        ti_Read(&game.bgColor, 1, 1, file);
+        ti_Read(&game.wallColor, 1, 1, file);
+        ti_Read(&game.playerColor, 1, 1, file);
+        ti_Read(&game.goalColor, 1, 1, file);
+        ti_Read(&game.maze.rows, 1, 1, file);
+        ti_Read(&game.maze.cols, 1, 1, file);
     }
     gfx_Begin();
     walled_maze(&game.maze);
