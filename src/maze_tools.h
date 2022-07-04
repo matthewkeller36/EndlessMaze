@@ -27,8 +27,8 @@ typedef struct {
 
 typedef struct {
     cell_t cells[MAX_CELL_ROWS][MAX_CELL_COLS];
-    int finishrow, finishcol;
-    int rows, cols;
+    uint8_t finishrow, finishcol;
+    uint8_t rows, cols;
 }maze_t;
 
 /**
@@ -62,6 +62,6 @@ void print_maze(maze_t *maze);
  * @param maxCol Maximum column.
  * @return Number of possible movement directions.
  */
-int getAdjacentNum_IGNORE_VISIT(int dir[], int cell_row, int cell_col, int maxRow, int maxCol);
+int getAdjacentNum_IGNORE_VISIT(int dir[], uint8_t cell_row, uint8_t cell_col, uint8_t maxRow, uint8_t maxCol);
 
 #endif
