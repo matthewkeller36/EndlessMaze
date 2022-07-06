@@ -1,6 +1,8 @@
 #ifndef MAZE_TOOLS_H
 #define MAZE_TOOLS_H
 
+#include <stdint.h>
+
 #define MAZE_X_MIN 10
 #define MAZE_X_MAX 320 - MAZE_X_MIN
 #define MAZE_Y_MIN 10
