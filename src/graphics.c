@@ -4,10 +4,8 @@
 #include "graphics.h"
 
 
-void gfx_dispMaze(maze_t *maze, uint8_t bgColor, uint8_t wallColor, uint8_t playerColor){
-    uint8_t cellSize = (((MAZE_Y_MAX - MAZE_Y_MIN)) / maze->rows < ((MAZE_X_MAX - MAZE_X_MIN))  / maze->cols ? 
-        (MAZE_Y_MAX - MAZE_Y_MIN) / maze->rows : 
-        (MAZE_X_MAX - MAZE_X_MIN) / maze->cols);
+void gfx_dispMaze(maze_t *maze, uint8_t bgColor, uint8_t wallColor, uint8_t playerColor, uint8_t cellSize){
+    
     int mazeWidth = cellSize * maze->cols;
     int mazeHeight = cellSize * maze->rows;
 
