@@ -15,4 +15,6 @@
  */
 void gfx_dispMaze(maze_t * maze, uint8_t bgColor, uint8_t wallColor, uint8_t playerColor, uint8_t cellSize);
 
+void render_play(struct game_s *game, struct player_s *player);
+
 #endif
