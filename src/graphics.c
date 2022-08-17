@@ -1,5 +1,6 @@
 #include <tice.h>
 #include <stdint.h>
+#include <graphx.h>
 
 #include "graphics.h"
 
