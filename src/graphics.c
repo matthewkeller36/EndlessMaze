@@ -4,6 +4,15 @@
 
 #include "graphics.h"
 
+void waitNextFrame(int target){
+    
+    while(544 > timer_GetSafe(1, TIMER_UP));
+    timer_Disable(1);
+    timer_Set(1, 0);
+    timer_Enable(1, TIMER_32K, TIMER_0INT, TIMER_UP);
+    return;
+}
+
 
 void gfx_dispMaze(maze_t *maze, uint8_t bgColor, uint8_t wallColor, uint8_t playerColor, uint8_t cellSize){
     
@@ -28,4 +37,8 @@ void gfx_dispMaze(maze_t *maze, uint8_t bgColor, uint8_t wallColor, uint8_t play
     gfx_PrintString(" Height: ");
     gfx_PrintInt(maze->rows, 1);
 
+}
+
+void render_play(struct game_s *game, struct player_s *player){
+    
 }
