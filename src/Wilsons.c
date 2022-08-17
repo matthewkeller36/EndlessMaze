@@ -1,7 +1,9 @@
 #include <stdlib.h>
 #include <debug.h>
 #include <stdint.h>
+#include <tice.h>
 #include "Wilsons.h"
+#include "graphics.h"
 
 /**
  * @brief Adds Wilson chain to a maze starting at the given row and column.
@@ -41,6 +43,7 @@ int build_wilson_chain(maze_t *maze, uint8_t row, uint8_t col){
                 currCell->east = 0;
                 break;
         }
+        dbg_sprintf(dbgout, "Walls Remaining: %d\n",getWallCount(maze));
     }
     return visited;
 }
@@ -71,6 +74,7 @@ int wilsons_gen(maze_t *maze, int numToVisit){
         }
         cell_t *currentCell = &maze->cells[cur_row][cur_col];
         /* Add the chain to the maze. Set the flag to start a new chain */
+        
         if(currentCell->visited){
             numToVisit -= build_wilson_chain(maze, start_row, start_col);
             dbg_sprintf(dbgout, "remaining: %d\n", numToVisit);

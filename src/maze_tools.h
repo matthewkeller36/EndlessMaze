@@ -66,4 +66,19 @@ void print_maze(maze_t *maze);
  */
 uint8_t getAdjacentNum_IGNORE_VISIT(uint8_t dir[], uint8_t cell_row, uint8_t cell_col, uint8_t maxRow, uint8_t maxCol);
 
+/**
+ * @brief For debugging. Gets the number of walls in the maze.
+ * 
+ * @param maze Pointer to maze structure.
+ * @return Number of walls in the maze.
+ */
+int getWallCount(maze_t *maze);
+
+/**
+ * @brief For debugging. Prints the indexes of all unvisited cells and total unvisited cells.
+ * 
+ * @param maze Pointer to maze structure.
+ */
+void printUnvisitIndex(maze_t *maze);
+
 #endif
