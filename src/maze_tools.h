@@ -33,6 +33,18 @@ typedef struct {
     uint8_t rows, cols;
 }maze_t;
 
+struct game_s{
+    maze_t maze;
+    char state;
+    uint8_t cellSize;
+    uint8_t bgColor, wallColor, playerColor, goalColor;
+};
+
+struct player_s{
+    uint8_t row, col;
+    uint8_t moveDir;
+};
+
 /**
  * @brief Fills a maze with walls.
  * 
