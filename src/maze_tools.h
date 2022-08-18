@@ -42,7 +42,7 @@ struct game_s{
 
 struct player_s{
     uint8_t row, col;
-    uint8_t moveDir;
+    int8_t moveDir;
 };
 
 /**
