@@ -2,9 +2,9 @@
 # Makefile Options
 # ----------------------------
 
-NAME ?= DEMO
+NAME ?= ENDMAZE
 ICON ?= icon.png
-DESCRIPTION ?= "CE C Toolchain Demo"
+DESCRIPTION ?= "A maze generator for the CE"
 COMPRESSED ?= NO
 ARCHIVED ?= NO
 
