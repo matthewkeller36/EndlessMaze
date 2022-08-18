@@ -74,7 +74,7 @@ void render_play(struct game_s *game, struct player_s *player){
     xStep /= NUM_FRAMES_PER_MOVE;
     yStep /= NUM_FRAMES_PER_MOVE;
 
-    for(uint8_t i = NUM_FRAMES_PER_MOVE + 1; i > 0; i--){
+    for(uint8_t i = NUM_FRAMES_PER_MOVE; i > 0; i--){
         // Remove old player and draw new player mid animation.
         gfx_SetColor(game->bgColor);
         gfx_FillRectangle(playerEndX - xStep * i, playerEndY - yStep * i, game->cellSize - 1, game->cellSize - 1);
@@ -83,6 +83,4 @@ void render_play(struct game_s *game, struct player_s *player){
         waitNextFrame();
         gfx_BlitBuffer();
     }
-    
-
 }
