@@ -29,7 +29,6 @@ typedef struct {
 
 typedef struct {
     cell_t cells[MAX_CELL_ROWS][MAX_CELL_COLS];
-    uint8_t finishrow, finishcol;
     uint8_t rows, cols;
 }maze_t;
 
