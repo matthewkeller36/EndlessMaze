@@ -4,6 +4,8 @@
 #include "maze_tools.h"
 #include <stdint.h>
 
+void init_graphics();
+
 /**
  * @brief Prints a map to the screen using color arguments
  * 
