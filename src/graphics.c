@@ -12,7 +12,7 @@ void init_graphics(){
     gfx_Begin();
     gfx_SetDrawBuffer();
 
-    // Set up timer for maximum framerate
+    // Set up timer for maximum framerate.
     timer_Set(1, 32678 / FRAME_LIMIT);
     timer_SetReload(1, 32678 / FRAME_LIMIT);
     timer_Enable(1, TIMER_32K, TIMER_0INT, TIMER_DOWN);
@@ -62,26 +62,26 @@ void render_play(struct game_s *game, struct player_s *player){
     int playerEndY = MAZE_Y_MIN + player->row * game->cellSize + 1;
 
     // Not initialized as steps. Used to find starting position before division due to 
-    // possible pixel loss when dividing
+    // possible pixel loss when dividing.
     int8_t xStep = game->cellSize * ((player->moveDir == East) - (player->moveDir == West));
     int8_t yStep = game->cellSize * ((player->moveDir == South) - (player->moveDir == North));
 
-    // Clear player from screen at start of frame
+    // Clear player from screen at start of frame.
     gfx_SetColor(game->bgColor);
     gfx_FillRectangle(playerEndX - xStep, playerEndY - yStep, game->cellSize - 1, game->cellSize - 1);
 
-    // Set pixel steps to be... well... actual steps
+    // Set pixel steps to be... well... actual steps.
     xStep /= NUM_FRAMES_PER_MOVE;
     yStep /= NUM_FRAMES_PER_MOVE;
-    
+
     for(uint8_t i = NUM_FRAMES_PER_MOVE + 1; i > 0; i--){
+        // Remove old player and draw new player mid animation.
         gfx_SetColor(game->bgColor);
         gfx_FillRectangle(playerEndX - xStep * i, playerEndY - yStep * i, game->cellSize - 1, game->cellSize - 1);
         gfx_SetColor(game->playerColor);
         gfx_FillRectangle(playerEndX - xStep * (i - 1), playerEndY - yStep * (i - 1), game->cellSize - 1, game->cellSize - 1);
         waitNextFrame();
-        gfx_SwapDraw();
-        gfx_BlitScreen();
+        gfx_BlitBuffer();
     }
     
 

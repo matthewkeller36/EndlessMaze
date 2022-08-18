@@ -34,7 +34,7 @@ enum{MENU, GENERATE, PLAY, QUIT};
 int main(void){
     static struct game_s game;
     struct player_s player;
-    ti_var_t file;
+    uint8_t file;
     if(!(file = ti_Open("EMSETT", "r"))){
         game.bgColor = 255;
         game.wallColor = 0;
@@ -50,6 +50,7 @@ int main(void){
         ti_Read(&game.maze.rows, 1, 1, file);
         ti_Read(&game.maze.cols, 1, 1, file);
     }
+    ti_Close(file);
     game.state = GENERATE;
     timer_Disable(3);
     timer_SetReload(3, 32768 / 5);
@@ -82,7 +83,7 @@ int main(void){
             // Only display maze once. Rest will be partial redraws.
             gfx_dispMaze(&game.maze, game.bgColor, game.wallColor, game.playerColor, game.cellSize);
             continue;
-            
+
         }else if(game.state == PLAY){
             int8_t thisMove = getMoveDir();
             switch(thisMove){
@@ -116,9 +117,21 @@ int main(void){
             player.moveDir = -1;
             dbg_sprintf(dbgout, "Player Col: %d Player Row: %d\n", player.col, player.row);
             
+        }else if(game.state = QUIT){
+            break;
         }
     }
     
     gfx_End();
+
+    if(!(file = ti_Open("EMSETT", "w"))){
+        ti_Write(&game.bgColor, 1, 1, file);
+        ti_Write(&game.wallColor, 1, 1, file);
+        ti_Write(&game.playerColor, 1, 1, file);
+        ti_Write(&game.goalColor, 1, 1, file);
+        ti_Write(&game.maze.rows, 1, 1, file);
+        ti_Write(&game.maze.cols, 1, 1, file);
+        ti_Close(file);
+    }
     return 0;
 }
