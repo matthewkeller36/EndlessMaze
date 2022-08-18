@@ -3,16 +3,16 @@
 #include <debug.h>
 #include "input.h"
 
-#define REPEAT_PER_SEC 5
+#define REPEAT_PER_SEC 10
 
 /**
  * @brief Resets timer 1 to 32K/REPEAT_PER_SEC clock cycles
  * 
  */
 void resetTimer(){
-    timer_Disable(1);
-    timer_SetReload(1, 32768 / REPEAT_PER_SEC);
-    timer_Set(1, 32768 / REPEAT_PER_SEC);
+    timer_Disable(3);
+    timer_SetReload(3, 32768 / REPEAT_PER_SEC);
+    timer_Set(3, 32768 / REPEAT_PER_SEC);
 }
 
 enum{North, East, South, West};
@@ -22,13 +22,11 @@ int8_t getMoveDir(){
     kb_Scan();
 
     if(kb_Data[7]){
-        if(timer_1_Counter == timer_1_ReloadValue || (timer_IntStatus & TIMER1_RELOADED)){
-            if(timer_1_Counter == timer_1_ReloadValue){
-                dbg_sprintf(dbgout, "Reload value\n");
-            }
-            if(timer_IntStatus & TIMER1_RELOADED){
-                timer_IntAcknowledge = TIMER1_RELOADED;
-                dbg_sprintf(dbgout, "Int reloaded\n");
+
+        if(timer_Get(3) == timer_GetReload(3) || timer_ChkInterrupt(3, TIMER_RELOADED)){
+            dbg_sprintf(dbgout, "Input detected\n");
+            if(timer_ChkInterrupt(3, TIMER_RELOADED)){
+                timer_AckInterrupt(3, TIMER_RELOADED);
             }
             if(kb_Data[7] & kb_Up){
                 retVal = North;
@@ -43,10 +41,10 @@ int8_t getMoveDir(){
                 retVal = West;
             }
         }
-        timer_Control = TIMER1_ENABLE | TIMER1_32K | TIMER1_0INT | TIMER1_DOWN;
+        timer_Enable(3, TIMER_32K, TIMER_0INT, TIMER_DOWN);
 
     }else{
-        timer_IntAcknowledge = TIMER1_RELOADED;
+        timer_AckInterrupt(3, TIMER_RELOADED);
         resetTimer();
     }
     return retVal;
