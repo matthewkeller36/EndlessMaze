@@ -31,22 +31,10 @@
 
 enum{MENU, GENERATE, PLAY, QUIT};
 
-struct game{
-    maze_t maze;
-    char state;
-    uint8_t cellSize;
-    uint8_t bgColor, wallColor, playerColor, goalColor;
-};
-
-struct player{
-    uint8_t row, col;
-};
-
 int main(void){
-    static struct game game;
-    struct player player;
+    static struct game_s game;
+    struct player_s player;
     ti_var_t file;
-    gfx_Begin();
     if(!(file = ti_Open("EMSETT", "r"))){
         game.bgColor = 255;
         game.wallColor = 0;
@@ -63,59 +51,71 @@ int main(void){
         ti_Read(&game.maze.cols, 1, 1, file);
     }
     game.state = GENERATE;
-    timer_Disable(1);
-    timer_SetReload(1, 32768 / 5);
-    timer_Set(1, 32768 / 5);
+    timer_Disable(3);
+    timer_SetReload(3, 32768 / 5);
+    timer_Set(3, 32768 / 5);
+    
     srand(rtc_Time());
+    init_graphics();
 
     while(game.state != QUIT){
         if(game.state == MENU){
 
         }else if(game.state == GENERATE){
+
+            // Fill maze and clear visited flags (necessary conditions for both generation methods)
             walled_maze(&game.maze);
             clear_visited(&game.maze);
+
+            // Generate ~1/3 of the maze using Aldous-Broder
             int numToVisit = AB_gen(&game.maze, 0, 0);
+
+            // Generate remaining maze using Wilson algorithm, update game state
             numToVisit = wilsons_gen(&game.maze, numToVisit);
             if(numToVisit == 0) game.state = PLAY;
             player.row = player.col = 0;
+            player.moveDir = -1;
             game.cellSize = (((MAZE_Y_MAX - MAZE_Y_MIN)) / game.maze.rows < ((MAZE_X_MAX - MAZE_X_MIN))  / game.maze.cols ? 
                 (MAZE_Y_MAX - MAZE_Y_MIN) / game.maze.rows : 
                 (MAZE_X_MAX - MAZE_X_MIN) / game.maze.cols);
+            
+            // Only display maze once. Rest will be partial redraws.
             gfx_dispMaze(&game.maze, game.bgColor, game.wallColor, game.playerColor, game.cellSize);
             continue;
+            
         }else if(game.state == PLAY){
-            int8_t moveDir = getMoveDir();
-            if(moveDir == -1){
-                continue;
-            }
-            gfx_SetColor(game.bgColor);
-            gfx_FillRectangle(MAZE_X_MIN + player.col * game.cellSize + 1, MAZE_Y_MIN + player.row * game.cellSize + 1, game.cellSize - 1, game.cellSize - 1);
-
-            switch(moveDir){
+            int8_t thisMove = getMoveDir();
+            switch(thisMove){
                 case North:
                     if(player.row > 0 && !game.maze.cells[player.row - 1][player.col].south){
                         player.row--;
+                        player.moveDir = thisMove;
                     }
                     break;
                 case East:
                     if(player.col < game.maze.cols && !game.maze.cells[player.row][player.col].east){
                         player.col++;
+                        player.moveDir = thisMove;
                     }
                     break;
                 case South:
                     if(player.row < game.maze.rows && !game.maze.cells[player.row][player.col].south){
                         player.row++;
+                        player.moveDir = thisMove;
                     }
                     break;
                 case West:
                     if(player.col > 0 && !game.maze.cells[player.row][player.col - 1].east){
                         player.col--;
+                        player.moveDir = thisMove;
                     }
                     break;
-
             }
-            gfx_SetColor(game.playerColor);
-            gfx_FillRectangle(MAZE_X_MIN + player.col * game.cellSize + 1, MAZE_Y_MIN + player.row * game.cellSize + 1, game.cellSize - 1, game.cellSize - 1);
+            
+            render_play(&game, &player);
+            player.moveDir = -1;
+            dbg_sprintf(dbgout, "Player Col: %d Player Row: %d\n", player.col, player.row);
+            
         }
     }
     
