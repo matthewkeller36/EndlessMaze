@@ -6,7 +6,7 @@
 #include "graphics.h"
 
 #define FRAME_LIMIT 60
-#define NUM_FRAMES_PER_MOVE 5
+#define NUM_FRAMES_PER_MOVE 3
 
 void init_graphics(){
     gfx_Begin();
@@ -55,46 +55,57 @@ void gfx_dispMaze(maze_t *maze, uint8_t bgColor, uint8_t wallColor, uint8_t goal
     gfx_PrintInt(maze->cols, 1);
     gfx_PrintString(" Height: ");
     gfx_PrintInt(maze->rows, 1);
+    gfx_SetColor(bgColor);
     waitNextFrame();
     gfx_BlitBuffer();
-
 }
 
-void gfx_hideWall(uint8_t row, uint8_t col,uint8_t bgColor, uint8_t direction, uint8_t cellSize){
-    gfx_SetColor(bgColor);
+void gfx_hideWall(uint8_t row, uint8_t col, uint8_t direction, uint8_t cellSize){
     if(direction == dir_East){
         gfx_VertLine_NoClip(MAZE_X_MIN + (1 + col) * cellSize, MAZE_Y_MIN + row * cellSize + 1, cellSize - 1);
     }else{
         gfx_HorizLine_NoClip(MAZE_X_MIN + col * cellSize + 1, MAZE_Y_MIN + (1 + row) * cellSize, cellSize - 1);
     }
-    gfx_BlitBuffer();
+    gfx_BlitRectangle(gfx_buffer, MAZE_X_MIN + col * cellSize, MAZE_Y_MIN + row * cellSize, cellSize + 1, cellSize + 1);
 }
 
 void render_play(struct game_s *game, struct player_s *player){
 
-    int playerEndX = MAZE_X_MIN + player->col * game->cellSize + 1;
-    int playerEndY = MAZE_Y_MIN + player->row * game->cellSize + 1;
-
     // Not initialized as steps. Used to find starting position before division due to 
     // possible pixel loss when dividing.
-    int8_t xStep = game->cellSize * ((player->moveDir == key_East) - (player->moveDir == key_West));
-    int8_t yStep = game->cellSize * ((player->moveDir == key_South) - (player->moveDir == key_North));
+    int8_t xStep = game->cellSize * ((player->moveDir == dir_East) - (player->moveDir == dir_West));
+    int8_t yStep = game->cellSize * ((player->moveDir == dir_South) - (player->moveDir == dir_North));
 
-    // Clear player from screen at start of frame.
-    gfx_SetColor(game->bgColor);
-    gfx_FillRectangle_NoClip(playerEndX - xStep, playerEndY - yStep, game->cellSize - 1, game->cellSize - 1);
+    int playerStartX = MAZE_X_MIN + player->col * game->cellSize + 1 - xStep;
+    int playerStartY = MAZE_Y_MIN + player->row * game->cellSize + 1 - yStep;
 
     // Set pixel steps to be... well... actual steps.
     xStep /= NUM_FRAMES_PER_MOVE;
     yStep /= NUM_FRAMES_PER_MOVE;
 
-    for(uint8_t i = NUM_FRAMES_PER_MOVE; i > 0; i--){
+    // Pre compute buffer blitting parameters
+    unsigned int bufX = playerStartX - game->cellSize * (xStep < 0);
+    unsigned int bufY = playerStartY - game->cellSize * (yStep < 0);
+    unsigned int bufWidth = game->cellSize * (1 + (xStep != 0));
+    unsigned int bufHeight = game->cellSize * (1 + (yStep != 0));
+
+    // Remove original player
+    gfx_SetColor(game->bgColor);
+    gfx_FillRectangle_NoClip(playerStartX, playerStartY, game->cellSize - 1, game->cellSize - 1);
+
+    dbg_sprintf(dbgout, "X: %d Y:%d\n", playerStartX, playerStartY);
+    dbg_sprintf(dbgout, "xStep: %d yStep:%d, Cell Size: %d\n", xStep, yStep, game->cellSize);
+
+    for(uint8_t i = 0; i < NUM_FRAMES_PER_MOVE; i++){
         // Remove old player and draw new player mid animation.
-        gfx_SetColor(game->bgColor);
-        gfx_FillRectangle_NoClip(playerEndX - xStep * i, playerEndY - yStep * i, game->cellSize - 1, game->cellSize - 1);
         gfx_SetColor(game->playerColor);
-        gfx_FillRectangle_NoClip(playerEndX - xStep * (i - 1), playerEndY - yStep * (i - 1), game->cellSize - 1, game->cellSize - 1);
+        gfx_FillRectangle_NoClip(playerStartX + xStep * (i + 1), playerStartY + yStep * (i + 1), game->cellSize - 1, game->cellSize - 1);
         waitNextFrame();
-        gfx_BlitBuffer();
+        gfx_BlitRectangle(gfx_buffer, bufX, bufY, bufWidth, bufHeight);
+        gfx_SetColor(game->bgColor);
+        gfx_FillRectangle_NoClip(playerStartX + xStep * (i + 1), playerStartY + yStep * (i + 1), game->cellSize - 1, game->cellSize - 1);
     }
+    gfx_SetColor(game->playerColor);
+    gfx_FillRectangle_NoClip(playerStartX + game->cellSize * (xStep != 0), playerStartY + game->cellSize * (yStep != 0), game->cellSize - 1, game->cellSize - 1);
+    gfx_BlitRectangle(gfx_buffer, bufX, bufY, bufWidth, bufHeight);
 }
