@@ -20,6 +20,9 @@ void resetTimer(){
 enum keyinput getMoveDir(){
     enum keyinput retVal = key_None;
     kb_Scan();
+    if(kb_Data[6] & kb_Clear){
+        return key_Clear;
+    }
 
     if(kb_Data[7]){
         if(timer_Get(3) == timer_GetReload(3) || timer_ChkInterrupt(3, TIMER_RELOADED)){
