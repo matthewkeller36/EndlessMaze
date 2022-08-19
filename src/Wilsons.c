@@ -22,22 +22,22 @@ int build_wilson_chain(maze_t *maze, uint8_t row, uint8_t col){
         visited++;
         currCell->visited = 1;
         switch(currCell->wilson_dir){
-            case North:
+            case dir_North:
                 row--;
                 currCell = &maze->cells[row][col];
                 currCell->south = 0;
                 break;
-            case East:
+            case dir_East:
                 col++;
                 currCell->east = 0;
                 currCell = &maze->cells[row][col];
                 break;
-            case South:
+            case dir_South:
                 row++;
                 currCell->south = 0;
                 currCell = &maze->cells[row][col];
                 break;
-            case West:
+            case dir_West:
                 col--;
                 currCell = &maze->cells[row][col];
                 currCell->east = 0;
@@ -86,16 +86,16 @@ int wilsons_gen(maze_t *maze, int numToVisit){
         ndirs = getAdjacentNum_IGNORE_VISIT(directions, cur_row, cur_col, maze->rows, maze->cols);
         currentCell->wilson_dir = directions[rand() % ndirs];
         switch(currentCell->wilson_dir){
-            case North:
+            case dir_North:
                 cur_row--;
                 break;
-            case East:
+            case dir_East:
                 cur_col++;
                 break;
-            case South:
+            case dir_South:
                 cur_row++;
                 break;
-            case West:
+            case dir_West:
                 cur_col--;
                 break;
         }

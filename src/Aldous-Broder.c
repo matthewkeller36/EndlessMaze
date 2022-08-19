@@ -6,7 +6,6 @@
 #include "graphics.h"
 #include <tice.h>
 
-
 int AB_gen(maze_t *maze, uint8_t startrow, uint8_t startcol){
     
     int numToVisit = maze->rows * maze->cols;
@@ -21,39 +20,35 @@ int AB_gen(maze_t *maze, uint8_t startrow, uint8_t startcol){
         ndirs = getAdjacentNum_IGNORE_VISIT(directions, cell_row, cell_col, maze->rows, maze->cols);
 
         switch(directions[rand() % ndirs]){
-            case North:
+            case dir_North:
                 nextCell = &maze->cells[cell_row - 1][cell_col];
                 if(!nextCell->visited){
                     numToVisit--;
                     nextCell->south = 0;
-                    dbg_sprintf(dbgout, "NumToVisit: %d Walls Remaining: %d\n", numToVisit, getWallCount(maze));
                 }
                 cell_row--;
                 break;
-            case East:
+            case dir_East:
                 nextCell = &maze->cells[cell_row][cell_col + 1];
                 if(!nextCell->visited){
                     numToVisit--;
                     currentCell->east = 0;
-                    dbg_sprintf(dbgout, "NumToVisit: %d Walls Remaining: %d\n", numToVisit, getWallCount(maze));
                 }
                 cell_col++;
                 break;
-            case South:
+            case dir_South:
                 nextCell = &maze->cells[cell_row + 1][cell_col];
                 if(!nextCell->visited){
                     numToVisit--;
                     currentCell->south = 0;
-                    dbg_sprintf(dbgout, "NumToVisit: %d Walls Remaining: %d\n", numToVisit, getWallCount(maze));
                 }
                 cell_row++;
                 break;
-            case West:
+            case dir_West:
                 nextCell = &maze->cells[cell_row][cell_col - 1];
                 if(!nextCell->visited){
                     numToVisit--;
                     nextCell->east = 0;
-                    dbg_sprintf(dbgout, "NumToVisit: %d Walls Remaining: %d\n", numToVisit, getWallCount(maze));
                 }
                 cell_col--;
                 break;
