@@ -11,7 +11,11 @@
 #define MAX_CELL_COLS (int) ((MAZE_X_MAX - MAZE_X_MIN) / 4)
 #define MAX_CELL_ROWS (int) ((MAZE_Y_MAX - MAZE_Y_MIN) / 4)
 
-enum{North, East, South, West, Ndirs};
+enum{dir_North, dir_East, dir_South, dir_West};
+
+enum keyinput{
+    key_None = -1, key_North, key_East, key_South, key_West, key_Clear
+};
 
 /**
  * @brief Cell structure used in making a maze.

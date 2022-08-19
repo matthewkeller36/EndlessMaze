@@ -50,16 +50,16 @@ void clear_visited(maze_t *maze){
 uint8_t getAdjacentNum_IGNORE_VISIT(uint8_t dir[], uint8_t cell_row, uint8_t cell_col, uint8_t maxRow, uint8_t maxCol){
     uint8_t ndir = 0;
     if(cell_row > 0){
-        dir[ndir++] = North;
+        dir[ndir++] = dir_North;
     }
     if(cell_col < maxCol - 1){
-        dir[ndir++] = East;
+        dir[ndir++] = dir_East;
     }
     if(cell_row < maxRow - 1){
-        dir[ndir++] = South;
+        dir[ndir++] = dir_South;
     }
     if(cell_col > 0){
-        dir[ndir++] = West;
+        dir[ndir++] = dir_West;
     }
     return ndir;
 }
