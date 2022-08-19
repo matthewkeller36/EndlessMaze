@@ -19,47 +19,56 @@ int AB_gen(maze_t *maze, uint8_t bgColor, uint8_t cellSize, uint8_t dispPerCell)
         currentCell->visited = 1;
         ndirs = getAdjacentNum_IGNORE_VISIT(directions, cell_row, cell_col, maze->rows, maze->cols);
 
+        // Move in random direction
         switch(directions[rand() % ndirs]){
             case dir_North:
                 nextCell = &maze->cells[cell_row - 1][cell_col];
+
+                // If cell hasn't been visited, remove correct wall and decrease amount to visit
                 if(!nextCell->visited){
                     numToVisit--;
                     nextCell->south = 0;
                     if(dispPerCell){
-                        gfx_hideWall(cell_row - 1, cell_col, bgColor, dir_South, cellSize);
+                        gfx_hideWall(cell_row - 1, cell_col, dir_South, cellSize);
                     }
                 }
                 cell_row--;
                 break;
             case dir_East:
                 nextCell = &maze->cells[cell_row][cell_col + 1];
+
+                // If cell hasn't been visited, remove correct wall and decrease amount to visit
                 if(!nextCell->visited){
                     numToVisit--;
                     currentCell->east = 0;
                     if(dispPerCell){
-                        gfx_hideWall(cell_row, cell_col, bgColor, dir_East, cellSize);
+                        gfx_hideWall(cell_row, cell_col, dir_East, cellSize);
                     }
                 }
                 cell_col++;
                 break;
             case dir_South:
                 nextCell = &maze->cells[cell_row + 1][cell_col];
+
+                // If cell hasn't been visited, remove correct wall and decrease amount to visit
                 if(!nextCell->visited){
                     numToVisit--;
                     currentCell->south = 0;
                     if(dispPerCell){
-                        gfx_hideWall(cell_row, cell_col, bgColor, dir_South, cellSize);
+                        gfx_hideWall(cell_row, cell_col, dir_South, cellSize);
                     }
                 }
                 cell_row++;
                 break;
             case dir_West:
                 nextCell = &maze->cells[cell_row][cell_col - 1];
+
+                // If cell hasn't been visited, remove correct wall and decrease amount to visit
                 if(!nextCell->visited){
                     numToVisit--;
                     nextCell->east = 0;
                     if(dispPerCell){
-                        gfx_hideWall(cell_row, cell_col - 1, bgColor, dir_East, cellSize);
+                        gfx_hideWall(cell_row, cell_col - 1, dir_East, cellSize);
                     }
                 }
                 cell_col--;

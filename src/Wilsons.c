@@ -25,14 +25,14 @@ int build_wilson_chain(maze_t *maze, uint8_t row, uint8_t col, uint8_t bgColor, 
             case dir_North:
                 row--;
                 if(dispPerCell){
-                    gfx_hideWall(row, col, bgColor, dir_South, cellSize);
+                    gfx_hideWall(row, col, dir_South, cellSize);
                 }
                 currCell = &maze->cells[row][col];
                 currCell->south = 0;
                 break;
             case dir_East:
                 if(dispPerCell){
-                    gfx_hideWall(row, col, bgColor, dir_East, cellSize);
+                    gfx_hideWall(row, col, dir_East, cellSize);
                 }
                 col++;
                 currCell->east = 0;
@@ -40,7 +40,7 @@ int build_wilson_chain(maze_t *maze, uint8_t row, uint8_t col, uint8_t bgColor, 
                 break;
             case dir_South:
                 if(dispPerCell){
-                    gfx_hideWall(row, col, bgColor, dir_South, cellSize);
+                    gfx_hideWall(row, col, dir_South, cellSize);
                 }
                 row++;
                 currCell->south = 0;
@@ -49,7 +49,7 @@ int build_wilson_chain(maze_t *maze, uint8_t row, uint8_t col, uint8_t bgColor, 
             case dir_West:
                 col--;
                 if(dispPerCell){
-                    gfx_hideWall(row, col, bgColor, dir_East, cellSize);
+                    gfx_hideWall(row, col, dir_East, cellSize);
                 }
                 currCell = &maze->cells[row][col];
                 currCell->east = 0;
