@@ -40,8 +40,8 @@ int main(void){
         game.wallColor = 0;
         game.playerColor = 31;
         game.goalColor = 37;
-        game.maze.rows = MAX_CELL_ROWS;
-        game.maze.cols = MAX_CELL_COLS;
+        game.maze.rows = 2;
+        game.maze.cols = 2;
     }else{
         ti_Read(&game.bgColor, 1, 1, file);
         ti_Read(&game.wallColor, 1, 1, file);
@@ -77,9 +77,9 @@ int main(void){
             }
 
             // Generate ~1/3 of the maze using Aldous-Broder
-            int numToVisit = AB_gen(&game.maze, game.bgColor, game.cellSize, 1);
+            int numToVisit = AB_gen(&game.maze, game.cellSize, 1);
             // Generate remaining maze using Wilson algorithm, update game state
-            numToVisit = wilsons_gen(&game.maze, numToVisit, game.bgColor, game.cellSize, 1);
+            numToVisit = wilsons_gen(&game.maze, numToVisit, game.cellSize, 1);
             if(numToVisit == 0) game.state = PLAY;
 
             // Initialize player for new game
@@ -117,10 +117,15 @@ int main(void){
                         player.moveDir = dir_West;
                     }
                     break;
+                case key_Clear:
+                    game.state = QUIT;
+                    break;
             }
 
             if(player.row == game.maze.rows - 1 && player.col == game.maze.cols - 1){
-                game.state = QUIT;
+                game.maze.rows += 1;
+                game.maze.cols += 1;
+                game.state = GENERATE;
             }
             
             render_play(&game, &player);
