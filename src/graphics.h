@@ -21,7 +21,7 @@ void init_graphics();
  */
 void gfx_dispMaze(maze_t * maze, uint8_t bgColor, uint8_t wallColor, uint8_t goalColor, uint8_t cellSize);
 
-void gfx_hideWall(uint8_t row, uint8_t col,uint8_t bgColor, uint8_t direction, uint8_t cellSize);
+void gfx_hideWall(uint8_t row, uint8_t col, uint8_t direction, uint8_t cellSize);
 
 /**
  * @brief Rendering function for PLAY game state.
