@@ -40,8 +40,8 @@ int main(void){
         game.wallColor = 0;
         game.playerColor = 31;
         game.goalColor = 37;
-        game.maze.rows = 10;
-        game.maze.cols = 10;
+        game.maze.rows = MAX_CELL_ROWS;
+        game.maze.cols = MAX_CELL_COLS;
     }else{
         ti_Read(&game.bgColor, 1, 1, file);
         ti_Read(&game.wallColor, 1, 1, file);
@@ -64,21 +64,27 @@ int main(void){
 
         }else if(game.state == GENERATE){
 
+            game.cellSize = (((MAZE_Y_MAX - MAZE_Y_MIN)) / game.maze.rows < ((MAZE_X_MAX - MAZE_X_MIN))  / game.maze.cols ? 
+                (MAZE_Y_MAX - MAZE_Y_MIN) / game.maze.rows : 
+                (MAZE_X_MAX - MAZE_X_MIN) / game.maze.cols);
+
             // Fill maze and clear visited flags (necessary conditions for both generation methods)
             walled_maze(&game.maze);
             clear_visited(&game.maze);
 
-            // Generate ~1/3 of the maze using Aldous-Broder
-            int numToVisit = AB_gen(&game.maze, 0, 0);
+            if(1){
+                gfx_dispMaze(&game.maze, game.bgColor, game.wallColor, game.bgColor, game.cellSize);
+            }
 
+            // Generate ~1/3 of the maze using Aldous-Broder
+            int numToVisit = AB_gen(&game.maze, game.bgColor, game.cellSize, 1);
             // Generate remaining maze using Wilson algorithm, update game state
-            numToVisit = wilsons_gen(&game.maze, numToVisit);
+            numToVisit = wilsons_gen(&game.maze, numToVisit, game.bgColor, game.cellSize, 1);
             if(numToVisit == 0) game.state = PLAY;
+
+            // Initialize player for new game
             player.row = player.col = 0;
-            player.moveDir = -1;
-            game.cellSize = (((MAZE_Y_MAX - MAZE_Y_MIN)) / game.maze.rows < ((MAZE_X_MAX - MAZE_X_MIN))  / game.maze.cols ? 
-                (MAZE_Y_MAX - MAZE_Y_MIN) / game.maze.rows : 
-                (MAZE_X_MAX - MAZE_X_MIN) / game.maze.cols);
+            player.moveDir = key_None;
             
             // Only display maze once. Rest will be partial redraws.
             gfx_dispMaze(&game.maze, game.bgColor, game.wallColor, game.goalColor, game.cellSize);
