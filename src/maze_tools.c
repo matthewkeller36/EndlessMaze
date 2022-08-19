@@ -73,16 +73,3 @@ int getWallCount(maze_t *maze){
     }
     return retVal;
 }
-
-void printUnvisitIndex(maze_t *maze){
-    int totalRemain = 0;
-    for(int i = 0; i < maze->rows; i++){
-        for(int j = 0; j < maze->cols; j++){
-            if(!maze->cells[i][j].visited){
-                dbg_sprintf(dbgout, "[%d][%d] unvisited\n", i, j);
-                totalRemain++;
-            }
-        }
-    }
-    dbg_sprintf(dbgout, "Total remaining: %d\n", totalRemain);
-}
