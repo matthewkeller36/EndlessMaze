@@ -30,21 +30,24 @@ void waitNextFrame(){
 }
 
 
-void gfx_dispMaze(maze_t *maze, uint8_t bgColor, uint8_t wallColor, uint8_t playerColor, uint8_t cellSize){
+void gfx_dispMaze(maze_t *maze, uint8_t bgColor, uint8_t wallColor, uint8_t goalColor, uint8_t cellSize){
     
     int mazeWidth = cellSize * maze->cols;
     int mazeHeight = cellSize * maze->rows;
 
     gfx_FillScreen(bgColor);
+    gfx_SetColor(goalColor);
+    gfx_FillRectangle_NoClip(MAZE_X_MIN + cellSize * (maze->cols - 1) + 1, MAZE_Y_MIN + cellSize * (maze->rows - 1) + 1, 
+        cellSize - 1, cellSize - 1);
     gfx_SetColor(wallColor);
-    gfx_Rectangle(MAZE_X_MIN, MAZE_Y_MIN, mazeWidth + 1, mazeHeight + 1);
+    gfx_Rectangle_NoClip(MAZE_X_MIN, MAZE_Y_MIN, mazeWidth + 1, mazeHeight + 1);
     for(uint8_t i = 0; i < maze->rows; i++){
         for(uint8_t j = 0; j < maze->cols; j++){
             if(maze->cells[i][j].east){
-                gfx_VertLine(MAZE_X_MIN + (1 + j) * cellSize, MAZE_Y_MIN + i * cellSize, cellSize + 1);
+                gfx_VertLine_NoClip(MAZE_X_MIN + (1 + j) * cellSize, MAZE_Y_MIN + i * cellSize, cellSize + 1);
             }
             if(maze->cells[i][j].south){
-                gfx_HorizLine(MAZE_X_MIN + j * cellSize, MAZE_Y_MIN + (1 + i) * cellSize, cellSize + 1);
+                gfx_HorizLine_NoClip(MAZE_X_MIN + j * cellSize, MAZE_Y_MIN + (1 + i) * cellSize, cellSize + 1);
             }
         }
     }
@@ -63,12 +66,12 @@ void render_play(struct game_s *game, struct player_s *player){
 
     // Not initialized as steps. Used to find starting position before division due to 
     // possible pixel loss when dividing.
-    int8_t xStep = game->cellSize * ((player->moveDir == East) - (player->moveDir == West));
-    int8_t yStep = game->cellSize * ((player->moveDir == South) - (player->moveDir == North));
+    int8_t xStep = game->cellSize * ((player->moveDir == key_East) - (player->moveDir == key_West));
+    int8_t yStep = game->cellSize * ((player->moveDir == key_South) - (player->moveDir == key_North));
 
     // Clear player from screen at start of frame.
     gfx_SetColor(game->bgColor);
-    gfx_FillRectangle(playerEndX - xStep, playerEndY - yStep, game->cellSize - 1, game->cellSize - 1);
+    gfx_FillRectangle_NoClip(playerEndX - xStep, playerEndY - yStep, game->cellSize - 1, game->cellSize - 1);
 
     // Set pixel steps to be... well... actual steps.
     xStep /= NUM_FRAMES_PER_MOVE;
@@ -77,9 +80,9 @@ void render_play(struct game_s *game, struct player_s *player){
     for(uint8_t i = NUM_FRAMES_PER_MOVE; i > 0; i--){
         // Remove old player and draw new player mid animation.
         gfx_SetColor(game->bgColor);
-        gfx_FillRectangle(playerEndX - xStep * i, playerEndY - yStep * i, game->cellSize - 1, game->cellSize - 1);
+        gfx_FillRectangle_NoClip(playerEndX - xStep * i, playerEndY - yStep * i, game->cellSize - 1, game->cellSize - 1);
         gfx_SetColor(game->playerColor);
-        gfx_FillRectangle(playerEndX - xStep * (i - 1), playerEndY - yStep * (i - 1), game->cellSize - 1, game->cellSize - 1);
+        gfx_FillRectangle_NoClip(playerEndX - xStep * (i - 1), playerEndY - yStep * (i - 1), game->cellSize - 1, game->cellSize - 1);
         waitNextFrame();
         gfx_BlitBuffer();
     }
