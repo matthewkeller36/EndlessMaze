@@ -5,6 +5,8 @@
 
 #define REPEAT_PER_SEC 10
 
+// enum{None = -1, North, East, South, West, Clear};
+
 /**
  * @brief Resets timer 1 to 32K/REPEAT_PER_SEC clock cycles
  * 
@@ -15,30 +17,27 @@ void resetTimer(){
     timer_Set(3, 32768 / REPEAT_PER_SEC);
 }
 
-enum{North, East, South, West};
-
-int8_t getMoveDir(){
-    int8_t retVal = -1;
+enum keyinput getMoveDir(){
+    enum keyinput retVal = key_None;
     kb_Scan();
 
     if(kb_Data[7]){
-
         if(timer_Get(3) == timer_GetReload(3) || timer_ChkInterrupt(3, TIMER_RELOADED)){
             dbg_sprintf(dbgout, "Input detected\n");
             if(timer_ChkInterrupt(3, TIMER_RELOADED)){
                 timer_AckInterrupt(3, TIMER_RELOADED);
             }
             if(kb_Data[7] & kb_Up){
-                retVal = North;
+                retVal = key_North;
             }
             if(kb_Data[7] & kb_Right){
-                retVal = East;
+                retVal = key_East;
             }
             if(kb_Data[7] & kb_Down){
-                retVal = South;
+                retVal = key_South;
             }
             if(kb_Data[7] & kb_Left){
-                retVal = West;
+                retVal = key_West;
             }
         }
         timer_Enable(3, TIMER_32K, TIMER_0INT, TIMER_DOWN);
