@@ -6,10 +6,10 @@
 #include "graphics.h"
 #include <tice.h>
 
-int AB_gen(maze_t *maze, uint8_t startrow, uint8_t startcol){
+int AB_gen(maze_t *maze, uint8_t bgColor, uint8_t cellSize, uint8_t dispPerCell){
     
     int numToVisit = maze->rows * maze->cols;
-    uint8_t cell_row = startrow, cell_col = startcol;
+    uint8_t cell_row = maze->rows / 2, cell_col = maze->cols / 2;
     uint8_t directions[4], ndirs;
     cell_t *currentCell  = &maze->cells[cell_row][cell_col], *nextCell;
     int lim = (numToVisit * 2 / 3);
@@ -25,6 +25,9 @@ int AB_gen(maze_t *maze, uint8_t startrow, uint8_t startcol){
                 if(!nextCell->visited){
                     numToVisit--;
                     nextCell->south = 0;
+                    if(dispPerCell){
+                        gfx_hideWall(cell_row - 1, cell_col, bgColor, dir_South, cellSize);
+                    }
                 }
                 cell_row--;
                 break;
@@ -33,6 +36,9 @@ int AB_gen(maze_t *maze, uint8_t startrow, uint8_t startcol){
                 if(!nextCell->visited){
                     numToVisit--;
                     currentCell->east = 0;
+                    if(dispPerCell){
+                        gfx_hideWall(cell_row, cell_col, bgColor, dir_East, cellSize);
+                    }
                 }
                 cell_col++;
                 break;
@@ -41,6 +47,9 @@ int AB_gen(maze_t *maze, uint8_t startrow, uint8_t startcol){
                 if(!nextCell->visited){
                     numToVisit--;
                     currentCell->south = 0;
+                    if(dispPerCell){
+                        gfx_hideWall(cell_row, cell_col, bgColor, dir_South, cellSize);
+                    }
                 }
                 cell_row++;
                 break;
@@ -49,6 +58,9 @@ int AB_gen(maze_t *maze, uint8_t startrow, uint8_t startcol){
                 if(!nextCell->visited){
                     numToVisit--;
                     nextCell->east = 0;
+                    if(dispPerCell){
+                        gfx_hideWall(cell_row, cell_col - 1, bgColor, dir_East, cellSize);
+                    }
                 }
                 cell_col--;
                 break;

@@ -3,7 +3,7 @@
 #include <debug.h>
 #include "input.h"
 
-#define REPEAT_PER_SEC 10
+#define REPEAT_PER_SEC 12
 
 // enum{None = -1, North, East, South, West, Clear};
 

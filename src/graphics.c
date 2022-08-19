@@ -6,7 +6,7 @@
 #include "graphics.h"
 
 #define FRAME_LIMIT 60
-#define NUM_FRAMES_PER_MOVE 4
+#define NUM_FRAMES_PER_MOVE 5
 
 void init_graphics(){
     gfx_Begin();
@@ -55,8 +55,19 @@ void gfx_dispMaze(maze_t *maze, uint8_t bgColor, uint8_t wallColor, uint8_t goal
     gfx_PrintInt(maze->cols, 1);
     gfx_PrintString(" Height: ");
     gfx_PrintInt(maze->rows, 1);
+    waitNextFrame();
     gfx_BlitBuffer();
 
+}
+
+void gfx_hideWall(uint8_t row, uint8_t col,uint8_t bgColor, uint8_t direction, uint8_t cellSize){
+    gfx_SetColor(bgColor);
+    if(direction == dir_East){
+        gfx_VertLine_NoClip(MAZE_X_MIN + (1 + col) * cellSize, MAZE_Y_MIN + row * cellSize + 1, cellSize - 1);
+    }else{
+        gfx_HorizLine_NoClip(MAZE_X_MIN + col * cellSize + 1, MAZE_Y_MIN + (1 + row) * cellSize, cellSize - 1);
+    }
+    gfx_BlitBuffer();
 }
 
 void render_play(struct game_s *game, struct player_s *player){
