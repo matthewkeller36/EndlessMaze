@@ -10,6 +10,6 @@
  * @param numToVisit Number of unvisited cells.
  * @return Remaining number of cells to visit (should be 0).
  */
-int wilsons_gen(maze_t *maze, int numToVisit, uint8_t bgColor, uint8_t cellSize, uint8_t dispPerCell);
+int wilsons_gen(maze_t *maze, int numToVisit, uint8_t cellSize, uint8_t dispPerCell);
 
 #endif

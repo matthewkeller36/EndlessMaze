@@ -6,7 +6,7 @@
 #include "graphics.h"
 #include <tice.h>
 
-int AB_gen(maze_t *maze, uint8_t bgColor, uint8_t cellSize, uint8_t dispPerCell){
+int AB_gen(maze_t *maze, uint8_t cellSize, uint8_t dispPerCell){
     
     int numToVisit = maze->rows * maze->cols;
     uint8_t cell_row = maze->rows / 2, cell_col = maze->cols / 2;

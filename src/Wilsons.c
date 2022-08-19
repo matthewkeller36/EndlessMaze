@@ -13,7 +13,7 @@
  * @param col Starting column of the chain.
  * @return Number of cells added from the chain.
  */
-int build_wilson_chain(maze_t *maze, uint8_t row, uint8_t col, uint8_t bgColor, uint8_t cellSize, uint8_t dispPerCell){
+int build_wilson_chain(maze_t *maze, uint8_t row, uint8_t col, uint8_t cellSize, uint8_t dispPerCell){
     cell_t *currCell = &maze->cells[row][col];
     int visited = 0;
     /* Iterate until chain has reached a visited cell */
@@ -59,7 +59,7 @@ int build_wilson_chain(maze_t *maze, uint8_t row, uint8_t col, uint8_t bgColor, 
     return visited;
 }
 
-int wilsons_gen(maze_t *maze, int numToVisit, uint8_t bgColor, uint8_t cellSize, uint8_t dispPerCell){
+int wilsons_gen(maze_t *maze, int numToVisit, uint8_t cellSize, uint8_t dispPerCell){
     /*Seed a new chain at a random starting point*/
     uint8_t cur_col = rand() % maze->cols;
     uint8_t cur_row = rand() % maze->rows;
@@ -86,7 +86,7 @@ int wilsons_gen(maze_t *maze, int numToVisit, uint8_t bgColor, uint8_t cellSize,
         /* Add the chain to the maze. Set the flag to start a new chain */
         
         if(currentCell->visited){
-            numToVisit -= build_wilson_chain(maze, start_row, start_col, bgColor, cellSize, dispPerCell);
+            numToVisit -= build_wilson_chain(maze, start_row, start_col, cellSize, dispPerCell);
             newChain = 1;
             continue;
         }
