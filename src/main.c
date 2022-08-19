@@ -1,6 +1,6 @@
 /*
  *--------------------------------------
- * Program Name: MazeDash
+ * Program Name: ENDLSSMZ
  * Author: matkeller19
  * License:
  * Description:
@@ -40,8 +40,8 @@ int main(void){
         game.wallColor = 0;
         game.playerColor = 31;
         game.goalColor = 37;
-        game.maze.rows = 20;
-        game.maze.cols = 20;
+        game.maze.rows = 10;
+        game.maze.cols = 10;
     }else{
         ti_Read(&game.bgColor, 1, 1, file);
         ti_Read(&game.wallColor, 1, 1, file);
@@ -81,50 +81,53 @@ int main(void){
                 (MAZE_X_MAX - MAZE_X_MIN) / game.maze.cols);
             
             // Only display maze once. Rest will be partial redraws.
-            gfx_dispMaze(&game.maze, game.bgColor, game.wallColor, game.playerColor, game.cellSize);
+            gfx_dispMaze(&game.maze, game.bgColor, game.wallColor, game.goalColor, game.cellSize);
             continue;
 
         }else if(game.state == PLAY){
-            int8_t thisMove = getMoveDir();
+            enum keyinput thisMove = getMoveDir();
             switch(thisMove){
-                case North:
+                case key_North:
                     if(player.row > 0 && !game.maze.cells[player.row - 1][player.col].south){
                         player.row--;
-                        player.moveDir = thisMove;
+                        player.moveDir = dir_North;
                     }
                     break;
-                case East:
+                case key_East:
                     if(player.col < game.maze.cols && !game.maze.cells[player.row][player.col].east){
                         player.col++;
-                        player.moveDir = thisMove;
+                        player.moveDir = dir_East;
                     }
                     break;
-                case South:
+                case key_South:
                     if(player.row < game.maze.rows && !game.maze.cells[player.row][player.col].south){
                         player.row++;
-                        player.moveDir = thisMove;
+                        player.moveDir = dir_South;
                     }
                     break;
-                case West:
+                case key_West:
                     if(player.col > 0 && !game.maze.cells[player.row][player.col - 1].east){
                         player.col--;
-                        player.moveDir = thisMove;
+                        player.moveDir = dir_West;
                     }
                     break;
+            }
+
+            if(player.row == game.maze.rows - 1 && player.col == game.maze.cols - 1){
+                game.state = QUIT;
             }
             
             render_play(&game, &player);
             player.moveDir = -1;
-            dbg_sprintf(dbgout, "Player Col: %d Player Row: %d\n", player.col, player.row);
             
-        }else if(game.state = QUIT){
+        }else if(game.state == QUIT){
             break;
         }
     }
     
     gfx_End();
 
-    if(!(file = ti_Open("EMSETT", "w"))){
+    if((file = ti_Open("EMSETT", "w"))){
         ti_Write(&game.bgColor, 1, 1, file);
         ti_Write(&game.wallColor, 1, 1, file);
         ti_Write(&game.playerColor, 1, 1, file);
