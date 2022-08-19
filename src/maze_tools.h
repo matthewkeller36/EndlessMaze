@@ -11,7 +11,7 @@
 #define MAX_CELL_COLS (int) ((MAZE_X_MAX - MAZE_X_MIN) / 4)
 #define MAX_CELL_ROWS (int) ((MAZE_Y_MAX - MAZE_Y_MIN) / 4)
 
-enum{dir_North, dir_East, dir_South, dir_West};
+enum {dir_North, dir_East, dir_South, dir_West};
 
 enum keyinput{
     key_None = -1, key_North, key_East, key_South, key_West, key_Clear
@@ -35,6 +35,8 @@ typedef struct {
     cell_t cells[MAX_CELL_ROWS][MAX_CELL_COLS];
     uint8_t rows, cols;
 }maze_t;
+
+
 
 struct game_s{
     maze_t maze;
